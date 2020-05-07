@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+   
+      <!-- Loading property file in ApplicationContext -->
+    <context:property-placeholder location="classpath:sports.properties"/>
+    
+    
+    <!-- Define dependency/helper for Dependency injection(Configure the dependency injection in Spring config file) -->
+   <bean id="myFortuneServices" class="baseballProblem.HappyFortuneService">
+   </bean>
+   
+   <!-- Beans used for Spring Inversion of Control(Configure spring beans) -->
+   
+   <bean id="BaseballCoach" class="baseballProblem.BaseballCoach">
+   <!-- Injecting dependency using constructor injection -->
+   <constructor-arg ref="myFortuneServices"></constructor-arg>
+   <!-- Adding variables from sports.properties file -->
+   <property name="emailAddress" value="${emailAddress}"></property>
+   <property name="team" value="${team}"></property>
+   </bean>
+   
+   <!-- Adding init and destroy methods (Bean Lifecycle) -->
+   <bean id="TrackCoach" class="baseballProblem.TrackCoach" init-method="doStartupStuff" destroy-method="doDeleteStuff">
+     <!-- Injecting dependency using constructor injection -->
+   <constructor-arg ref="myFortuneServices"></constructor-arg>
+   </bean>
+   
+   <bean id="CricketCoach" class="baseballProblem.CricketCoach">
+     <!-- Injecting dependency using Setter injection -->
+   <property  name="fortuneService" ref="myFortuneServices"></property>
+   
+     <!-- Literal dependency Injection using Setter injection -->
+     <property name="emailAddress" value="anirudh.thakur94@gmail.com"></property> 
+     <property name="team" value="Delhi Daredevils"></property> 
+   </bean>
+   
+   
+   <!-- Bean for Logging -->
+   <bean id="myLoggerConfig" class="baseballProblem.MyLoggerConfig" init-method="initLogger">
+    	<property name="rootLoggerLevel" value="FINE" />
+    	<property name="printedLoggerLevel" value="FINE"/>
+    </bean>
+</beans>
